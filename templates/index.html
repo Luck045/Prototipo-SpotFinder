@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spot & Find</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+
+    .search-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    #searchInput {
+      flex: 1 1 400px;
+      max-width: 600px;
+      padding: 12px 15px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    #btnFiltroAvancado {
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #e74c3c;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+    }
+
+    #btnFiltroAvancado:hover {
+      background-color: #c0392b;
+    }
+
+    #resultsList {
+      max-height: 400px;
+      overflow-y: auto;
+      background-color: #34495e;
+      padding: 15px;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .music-result {
+      padding: 10px 8px;
+      border-bottom: 1px solid #2c3e50;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      color: #fff;
+    }
+
+    .music-result:hover {
+      background-color: #e74c3c;
+      color: #fff;
+    }
+
+    .music-result small {
+      display: block;
+      margin-top: 4px;
+      color: #ddd;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 480px) {
+      .search-area {
+        flex-direction: column;
+        gap: 15px;
+      }
+      #searchInput {
+        max-width: 100%;
+      }
+      #btnFiltroAvancado {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Spot & Find - Aqui você encontra</h1>
+
+    <div class="search-area">
+      <input id="searchInput" type="text" placeholder="Pesquisar..." autocomplete="off" />
+      <button id="btnFiltroAvancado" type="button">Filtro Avançado</button>
+    </div>
+
+    <div class="results" id="resultsList"></div>
+  </div>
+
+  <script>
+    const input = document.getElementById('searchInput');
+    const resultsList = document.getElementById('resultsList');
+    const btnFiltroAvancado = document.getElementById('btnFiltroAvancado');
+
+    input.addEventListener('input', () => {
+      const query = input.value.trim();
+      if (!query) {
+        resultsList.innerHTML = '';
+        return;
+      }
+
+      fetch(`/search?query=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(results => {
+          resultsList.innerHTML = '';
+          if (!results.length) {
+            resultsList.innerHTML = '<p>Nenhum resultado encontrado.</p>';
+            return;
+          }
+          results.forEach(r => {
+            const div = document.createElement('div');
+            div.className = 'music-result';
+
+            const mainText = document.createElement('strong');
+            mainText.textContent = r.title;
+            div.appendChild(mainText);
+            div.appendChild(document.createTextNode(` por ${r.artist} (${r.year})`));
+
+            const details = document.createElement('small');
+            details.textContent = `Estilo: ${r.style} | Instrumentos: ${r.instruments} | Gênero: ${r.singer_gender}`;
+            div.appendChild(details);
+
+            resultsList.appendChild(div);
+          });
+        })
+        .catch(err => {
+          resultsList.innerHTML = '<p>Erro ao buscar resultados.</p>';
+          console.error(err);
+        });
+    });
+
+    btnFiltroAvancado.addEventListener('click', () => {
+      window.location.href = "/filter_results";
+    });
+  </script>
+</body>
+</html>

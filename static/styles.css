@@ -1,0 +1,155 @@
+body {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.7);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #e74c3c;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background-color: #2980b9;
+    border: none;
+    padding: 12px 25px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    font-size: 16px;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.tab-button:hover {
+    background-color: #3498db;
+}
+
+.tab-button.active {
+    background-color: #e74c3c;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+input[type="text"] {
+    width: 75%;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    margin-right: 10px;
+}
+
+button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #c0392b;
+}
+
+.results {
+    margin-top: 20px;
+    background-color: #34495e;
+    padding: 15px;
+    border-radius: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.results div {
+    padding: 8px;
+    border-bottom: 1px solid #2c3e50;
+}
+
+.results div.music-result {
+    padding: 10px 8px;
+    border-bottom: 1px solid #2c3e50;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.results div.music-result:hover {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+label {
+    display: inline-block;
+    margin-right: 15px;
+    margin-top: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#slider-time-range {
+    height: 12px;
+    margin: 20px 0;
+}
+
+#timeSlider {
+  max-width: 600px;
+  height: 50px;
+  margin: 20px auto;
+}
+
+.noUi-target {
+    background: #e74c3c;
+    border-radius: 10px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.noUi-connect {
+    background: #c0392b;
+}
+
+.noUi-handle {
+    background: #fff;
+    border: 2px solid #e74c3c;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    top: -8px;
+    cursor: grab;
+}
+
+.noUi-tooltip {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    padding: 4px 8px;
+}
+

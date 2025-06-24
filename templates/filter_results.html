@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <title>Filtro Avançado - Spot & Find</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.css">
+
+    <style>
+        .btn-back {
+            margin-bottom: 20px;
+            display: inline-block;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .btn-back:hover {
+            text-decoration: underline;
+        }
+        label {
+            display: inline-block;
+            margin-right: 15px;
+            margin-top: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            color: #fff;
+        }
+        fieldset {
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+        legend {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        button[type="submit"] {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #c0392b;
+        }
+        .results h2 {
+            color: #e74c3c;
+        }
+        .results p {
+            color: #fff;
+        }
+        #slider-time-range {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Filtro Avançado - Spot & Find</h1>
+
+        <a href="/" class="btn-back">← Voltar para Pesquisa por Nome</a>
+
+        <form method="GET" action="/filter_results" id="filterForm">
+            <fieldset>
+                <legend>Estilos</legend>
+                {% for style in styles_todos %}
+                    <label>
+                        <input type="checkbox" name="style" value="{{ style }}"
+                        {% if style.lower() in selecionados_styles %}checked{% endif %}>
+                        {{ style }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset>
+                <legend>Gêneros do Cantor</legend>
+                {% for gender in genders_todos %}
+                    <label>
+                        <input type="checkbox" name="singer_gender" value="{{ gender }}"
+                        {% if gender.lower() in selecionados_genders %}checked{% endif %}>
+                        {{ gender }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset>
+                <legend>Instrumentos</legend>
+                {% for inst in instruments_todos %}
+                    <label>
+                        <input type="checkbox" name="instruments" value="{{ inst }}"
+                        {% if inst.lower() in selecionados_instruments %}checked{% endif %}>
+                        {{ inst }}
+                    </label>
+                {% endfor %}
+            </fieldset>
+
+            <fieldset>
+                <legend>Intervalo de Anos</legend>
+                <div id="slider-time-range"></div>
+                <input type="hidden" id="time_min" name="time_min" value="{{ time_min }}">
+                <input type="hidden" id="time_max" name="time_max" value="{{ time_max }}">
+                <p style="color: white;">Ano mínimo: <span id="year_min_display">{{ time_min }}</span></p>
+                <p style="color: white;">Ano máximo: <span id="year_max_display">{{ time_max }}</span></p>
+            </fieldset>
+
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <div class="results" id="resultsList">
+            <h2>Resultados</h2>
+            <p><strong>{{ filtrados|length }}</strong> música(s) encontrada(s)</p>
+            {% if filtrados %}
+                {% for music in filtrados %}
+                    <p>
+                        <strong>{{ music.title_original }}</strong> por {{ music.artist_original }}
+                        ({{ music.year }}) - {{ music.style_original }}
+                        {% if music.instruments_original %} | Instrumentos: {{ music.instruments_original }}{% endif %}
+                        {% if music.singer_gender_original %} | Gênero do cantor: {{ music.singer_gender_original }}{% endif %}
+                    </p>
+                {% endfor %}
+            {% else %}
+                <p>Nenhuma música encontrada com os filtros aplicados.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.getElementById('slider-time-range');
+            const inputMin = document.getElementById('time_min');
+            const inputMax = document.getElementById('time_max');
+            const displayMin = document.getElementById('display-min');
+            const displayMax = document.getElementById('display-max');
+
+            const initialMin = parseInt(inputMin.value);
+            const initialMax = parseInt(inputMax.value);
+
+            noUiSlider.create(slider, {
+                start: [initialMin, initialMax],
+                connect: true,
+                range: {
+                    'min': 1900,
+                    'max': 2023
+                },
+                step: 1,
+                tooltips: [true, true],
+                format: {
+                    to: value => Math.round(value),
+                    from: value => Number(value)
+                }
+            });
+
+            slider.noUiSlider.on('update', (values) => {
+                const [min, max] = values.map(value => Math.round(value));
+                inputMin.value = min;
+                inputMax.value = max;
+                displayMin.textContent = min;
+                displayMax.textContent = max;
+            });
+        });
+    </script>
+</body>
+</html>
